@@ -23,9 +23,7 @@ In addition, this project will include:
 
 This app will consist of a single screen with a grid, game controls, and controls modal.
 
-![Pathfinder wireframe][wireframes]
-
-[wireframe]: /docs/Pathfinderwireframe.jpeg
+![Pathfinder wireframe](/docs/Pathfinderwireframe.png)
 
 ### Architecture and Technologies
 
