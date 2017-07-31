@@ -27,21 +27,18 @@ This app will consist of a single screen with a grid, game controls, and control
 
 ### Architecture and Technologies
 
-**NB**: one of the main things you should be researching and deciding upon while you write this proposal is what technologies you plan to use.  Identify and create a plan of attack for the major technical challenges in your project.  It's okay if you don't have all the details of implementation fleshed out, but you should have a solid roadmap by Monday morning.
+This project will be build with the following
 
-This project will be implemented with the following technologies:
+- Vanilla Javascript
+- jquery
+- Easel.js
+- Canvas
 
-- Vanilla JavaScript and `jquery` for overall structure and game logic,
-- `Easel.js` with `HTML5 Canvas` for DOM manipulation and rendering,
-- Webpack to bundle and serve up the various scripts.
+board.js: this script will handle the logic for creating and updating the necessary Easel.js elements and rendering them to the DOM.
 
-In addition to the webpack entry file, there will be three scripts involved in this project:
+cell.js: this script will handle the logic behind the scenes of cells. A Cell object will hold a type and will be responsible for doing neighbor checks for each Cell upon iteration and updating the Cell array appropriately.
 
-`board.js`: this script will handle the logic for creating and updating the necessary `Easel.js` elements and rendering them to the DOM.
-
-`automata.js`: this script will handle the logic behind the scenes.  An Automata object will hold a `type` (hexagon, triangle, or square) and a 2D array of `Cell`s.  It will be responsible for doing neighbor checks for each `Cell` upon iteration and updating the `Cell` array appropriately.
-
-`cell.js`: this lightweight script will house the constructor and update functions for the `Cell` objects.  Each `Cell` will contain a `type` (hexagon, triangle, or square) and an `aliveState` (`true` or `false`).
+search.js: this lightweight script will house the constructor and update functions for the Cell objects. This will be the  wrapper class for a general search algorithm (BFS, A\*, etc..).
 
 ### Implementation Timeline
 
@@ -55,25 +52,20 @@ In addition to the webpack entry file, there will be three scripts involved in t
 - Complete the `cell.js` module (constructor, update functions)
 - Render a square grid to the `Canvas` using `Easel.js`
 - Make each cell in the grid clickable, toggling the state of the square on click
-- Do the same for triangular and hexagonal grids
 
-**Day 3**: Create the automata logic backend.  Build out modular functions for handling the different grid types along with their unique neighbor checks and rule sets.  Incorporate the automata logic into the `Board.js` rendering.  Goals for the day:
+**Day 3**: Implement the algorithms and finish up an algorithm class for the array of coordinates. Goals for the day:
 
-- Export an `Automata` object with correct type and handling logic
-- Have a functional grid on the `Canvas` frontend that correctly handles iterations from one generation of the game to the next
+- Be able to run algorithms in console and create a path of coordinates
 
+**Day 4**: Style the frontend, making it polished and professional.  Goals for the day:
 
-**Day 4**: Install the controls for the user to interact with the game.  Style the frontend, making it polished and professional.  Goals for the day:
-
-- Create controls for game speed, stop, start, reset, and shape type
+- Create controls for stop, start, and reset
 - Have a styled `Canvas`, nice looking controls and title
-- If time: include buttons on the side to toggle the color scheme of the cells
 
 
 ### Bonus features
 
 There are many directions this cellular automata engine could eventually go.  Some anticipated updates are:
 
-- [ ] Add options for different rule sets
-- [ ] Add multiple choices for starting states that are interesting
-- [ ] Explore multi-state versions of the game, such as the ones outlined [here](https://cs.stanford.edu/people/eroberts/courses/soco/projects/2008-09/modeling-natural-systems/gameOfLife2.html)
+- [ ] Add more pathfinding algorithms to compare against the 3 made
+- [ ] Have automatic maze generation instead of user made obstacles
