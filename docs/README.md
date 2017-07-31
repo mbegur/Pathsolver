@@ -2,7 +2,7 @@
 
 ### Background
 
-Pathfinding or pathing is the plotting, by an application, of the shortest route between two points. Its is a more practical variant on solving mazes that can be implemented using a variety of algorithms.
+Pathfinding or pathing is the plotting, by an application, of the shortest route between two points. It is a more practical variant on solving mazes that can be implemented using a variety of algorithms.
 
 Pathfinder is web app that implements the most standard and commonly used algorithm, A\*, the optimized variant of A\*, Dijkstra's algorithm, and Breadth First Search to demonstrate the functionality in pathfinding with various algorithms.
 
