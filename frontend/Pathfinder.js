@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const stage = new createjs.Stage('pathFinderCanvas');
   const board = new Grid(stage);
   window.board = board;
-  board.drawGrid();
+  // board.drawGrid();
   // var stage = new createjs.Stage('pathFinderCanvas');
   // const view = new View(stage);
   // window.view = view;

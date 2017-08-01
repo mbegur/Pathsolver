@@ -1,41 +1,36 @@
 /* global createjs */
 class Cell {
   constructor(x, y) {
-    this.easelCell = new createjs.Shape();
+    this.cell = new createjs.Shape();
     this.drawBorder();
     this.isObstacle = false;
     this.fillByString('empty');
-
-    this.moveTo(x, y);
   }
 
-  toggleIsObstacle() {
+  fillColor(color) {
+    this.cell.graphics.beginFill(color).drawRect(0, 0, 10, 10);
+  }
+
+  fillByString(str) {
+    this.color = Cell.COLORS[str];
+    this.fillColor(Cell.COLORS[str]);
+  }
+
+  toggleObstacle() {
     this.isObstacle = !this.isObstacle;
-    const str =  this.isObstacle? 'obstacle' : 'empty';
+    const str = this.isObstacle? 'obstacle' : 'empty';
     this.fillByString(str);
   }
 
-  _fill(color) {
-    this.easelCell.graphics.beginFill(color).drawRect(0,0,10,10);
-  }
-
-  fillByString(colorString) {
-    this.color = Cell.COLORS[colorString];
-    this._fill(Cell.COLORS[colorString]);
-  }
-
   drawBorder() {
-    this.easelCell
-      .graphics
-      .setStrokeStyle(0.5)
-      .beginStroke('#ffffff')
-      .drawRect(0,0,10,10);
+    this.cell.graphics.setStrokeStyle(1).beginStroke('#fff').drawRect(0, 0, 10, 10);
   }
 
   moveTo(x, y) {
-    this.easelCell.x = x;
-    this.easelCell.y = y;
+    this.cell.x = x;
+    this.cell.y = y;
   }
+
 }
 
 Cell.COLORS = {
