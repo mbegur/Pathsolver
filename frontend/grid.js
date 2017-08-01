@@ -1,4 +1,5 @@
 /* global createjs */
+
 import Cell from './cell';
 
 class Grid {
@@ -14,12 +15,12 @@ class Grid {
   drawGrid() {
     let grid = [];
 
-    for(let i = 0; i < 15; i ++ ) {
+    for(let i = 0; i < 15; i++ ) {
       grid.push([]);
       for (let j = 0; j < 15; j++) {
-        const singleCell = new Cell(i*10, j*10);
-        this.stage.addChild(singleCell.cell);
-        grid[i].push(singleCell);
+        const newCell = new Cell(i*10, j*10);
+        this.stage.addChild(newCell.singleCell);
+        grid[i].push(newCell);
       }
     }
 
@@ -52,8 +53,8 @@ class Grid {
   handleMouseOver(e) {
     const currX = Math.floor(e.stageX/10) * 10;
     const currY = Math.floor(e.stageY/10) * 10;
-    const prevX = this.handleMouseMove.prevX;
-    const prevY = this.handleMouseMove.prevY;
+    const prevX = this.handleMouseOver.prevX;
+    const prevY = this.handleMouseOver.prevY;
 
     if (currX !== prevX || currY !== prevY) {
       const cell = this.grid[currX/10][currY/10];
@@ -71,11 +72,11 @@ class Grid {
   }
 
   isStart(x, y) {
-    return x === this.start.cell.x && y === this.start.cell.y;
+    return x === this.start.singleCell.x && y === this.start.singleCell.y;
   }
 
   isEnd(x, y) {
-    return x === this.end.cell.x && this.end.easelCell.y;
+    return x === this.end.singleCell.x && this.end.singleCell.y;
   }
 
   setStart(node) {
@@ -91,7 +92,7 @@ class Grid {
     if (this.end) {
       this.end.fillByString('empty');
     }
-    node.fillByString('start');
+    node.fillByString('end');
     this.start = node;
   }
 

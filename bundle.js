@@ -107,7 +107,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global createjs */
 
-
 var _cell = __webpack_require__(2);
 
 var _cell2 = _interopRequireDefault(_cell);
@@ -137,9 +136,9 @@ var Grid = function () {
       for (var i = 0; i < 15; i++) {
         grid.push([]);
         for (var j = 0; j < 15; j++) {
-          var singleCell = new _cell2.default(i * 10, j * 10);
-          this.stage.addChild(singleCell.cell);
-          grid[i].push(singleCell);
+          var newCell = new _cell2.default(i * 10, j * 10);
+          this.stage.addChild(newCell.singleCell);
+          grid[i].push(newCell);
         }
       }
 
@@ -173,8 +172,8 @@ var Grid = function () {
     value: function handleMouseOver(e) {
       var currX = Math.floor(e.stageX / 10) * 10;
       var currY = Math.floor(e.stageY / 10) * 10;
-      var prevX = this.handleMouseMove.prevX;
-      var prevY = this.handleMouseMove.prevY;
+      var prevX = this.handleMouseOver.prevX;
+      var prevY = this.handleMouseOver.prevY;
 
       if (currX !== prevX || currY !== prevY) {
         var cell = this.grid[currX / 10][currY / 10];
@@ -193,12 +192,12 @@ var Grid = function () {
   }, {
     key: 'isStart',
     value: function isStart(x, y) {
-      return x === this.start.cell.x && y === this.start.cell.y;
+      return x === this.start.singleCell.x && y === this.start.singleCell.y;
     }
   }, {
     key: 'isEnd',
     value: function isEnd(x, y) {
-      return x === this.end.cell.x && this.end.easelCell.y;
+      return x === this.end.singleCell.x && this.end.singleCell.y;
     }
   }, {
     key: 'setStart',
@@ -216,7 +215,7 @@ var Grid = function () {
       if (this.end) {
         this.end.fillByString('empty');
       }
-      node.fillByString('start');
+      node.fillByString('end');
       this.start = node;
     }
   }]);
@@ -242,28 +241,20 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /* global createjs */
+
 var Cell = function () {
   function Cell(x, y) {
     _classCallCheck(this, Cell);
 
-    this.cell = new createjs.Shape();
+    this.singleCell = new createjs.Shape();
     this.drawBorder();
     this.isObstacle = false;
     this.fillByString('empty');
+
+    this.moveTo(x, y);
   }
 
   _createClass(Cell, [{
-    key: 'fillColor',
-    value: function fillColor(color) {
-      this.cell.graphics.beginFill(color).drawRect(0, 0, 10, 10);
-    }
-  }, {
-    key: 'fillByString',
-    value: function fillByString(str) {
-      this.color = Cell.COLORS[str];
-      this.fillColor(Cell.COLORS[str]);
-    }
-  }, {
     key: 'toggleObstacle',
     value: function toggleObstacle() {
       this.isObstacle = !this.isObstacle;
@@ -271,15 +262,26 @@ var Cell = function () {
       this.fillByString(str);
     }
   }, {
+    key: '_fill',
+    value: function _fill(color) {
+      this.singleCell.graphics.beginFill(color).drawRect(0, 0, 10, 10);
+    }
+  }, {
+    key: 'fillByString',
+    value: function fillByString(colorString) {
+      this.color = Cell.COLORS[colorString];
+      this._fill(Cell.COLORS[colorString]);
+    }
+  }, {
     key: 'drawBorder',
     value: function drawBorder() {
-      this.cell.graphics.setStrokeStyle(1).beginStroke('#fff').drawRect(0, 0, 10, 10);
+      this.singleCell.graphics.setStrokeStyle(0.5).beginStroke('#ffffff').drawRect(0, 0, 10, 10);
     }
   }, {
     key: 'moveTo',
     value: function moveTo(x, y) {
-      this.cell.x = x;
-      this.cell.y = y;
+      this.singleCell.x = x;
+      this.singleCell.y = y;
     }
   }]);
 
@@ -287,10 +289,10 @@ var Cell = function () {
 }();
 
 Cell.COLORS = {
-  'empty': '#f2f2f2',
-  'start': '#009933',
-  'end': '#0000ff',
-  'obstacle': '#a6a6a6'
+  'empty': '#DCDCDC',
+  'start': '#008000',
+  'end': '#FF0000',
+  'obstacle': '#808080'
 };
 
 exports.default = Cell;
