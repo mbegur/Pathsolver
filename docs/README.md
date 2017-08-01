@@ -34,7 +34,7 @@ This project will be build with the following
 - Easel.js
 - Canvas
 
-board.js: this script will handle the logic for creating and updating the necessary Easel.js elements and rendering them to the DOM.
+grid.js: this script will handle the logic for creating and updating the necessary Easel.js elements and rendering them to the DOM.
 
 cell.js: this script will handle the logic behind the scenes of cells. A Cell object will hold a type and will be responsible for doing neighbor checks for each Cell upon iteration and updating the Cell array appropriately.
 

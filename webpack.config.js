@@ -3,9 +3,9 @@ var path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: "./js/pathfinder",
+  entry: "./frontend/Pathfinder",
   output: {
-    filename: "./js/bundle.js"
+    filename: "./bundle.js"
   },
   devtool: 'source-maps',
   resolve: {
