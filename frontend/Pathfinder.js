@@ -1,5 +1,5 @@
 import Grid from './grid';
-import View from './view';
+import Root from './root';
 /* global createjs */
 
 document.addEventListener('DOMContentLoaded', () => {

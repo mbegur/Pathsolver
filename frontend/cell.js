@@ -1,60 +1,48 @@
 /* global createjs */
-
 class Cell {
+  constructor(x, y) {
+    this.easelCell = new createjs.Shape();
+    this.drawBorder();
+    this.isObstacle = false;
+    this.fillByString('empty');
 
-  constructor(x, y, move) {
-    this.cell = new createjs.Shape();
-    this.coord = [x, y].join();
-    this.cell.x = x;
-    this.cell.y = y;
-    this.move = move;
-
+    this.moveTo(x, y);
   }
 
-  setFill(fill) {
-    this.fill = fill;
-    this.color(Cell.CELLCOLORS[fill]);
+  toggleIsObstacle() {
+    this.isObstacle = !this.isObstacle;
+    const str =  this.isObstacle? 'obstacle' : 'empty';
+    this.fillByString(str);
   }
 
-  toggleObstacle() {
-    if (this.fill === 'obstacle') {
-      this.setFill('empty');
-    } else if (this.fill === 'empty') {
-      this.setFill('obstacle');
-    }
+  _fill(color) {
+    this.easelCell.graphics.beginFill(color).drawRect(0,0,10,10);
+  }
+
+  fillByString(colorString) {
+    this.color = Cell.COLORS[colorString];
+    this._fill(Cell.COLORS[colorString]);
   }
 
   drawBorder() {
-    this.cell.graphics.setStrokeStyle(1).beginStroke('#ffffff')
-    .drawRect(0, 0, this.move[0], this.move[1]).endStroke();
+    this.easelCell
+      .graphics
+      .setStrokeStyle(0.5)
+      .beginStroke('#ffffff')
+      .drawRect(0,0,10,10);
   }
 
-  color(code) {
-    this.cell.graphics.clear();
-    this.drawBorder();
-    this.cell.graphics.beginFill(code).drawRect(1, 1, this.move[0] - 1, this.move[1] - 1).endFill();
-
-  }
-
-  clearIfSearch() {
-    if (['frontier', 'visited'].includes(this.type)) {
-      this.setType('empty');
-    }
-  }
-
-  clearIfObstacle() {
-    if (this.type === 'obstacle') this.setType('empty');
+  moveTo(x, y) {
+    this.easelCell.x = x;
+    this.easelCell.y = y;
   }
 }
 
-Cell.CELLCOLORS = {
+Cell.COLORS = {
   'empty': '#f2f2f2',
   'start': '#009933',
-  'end': '#cc0000',
-  'obstacle': '#a6a6a6',
-  'visited': '#ffb3ff',
-  'frontier': '#e6ffe6'
+  'end': '#0000ff',
+  'obstacle': '#a6a6a6'
 };
-
 
 export default Cell;

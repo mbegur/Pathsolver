@@ -1,188 +1,102 @@
 /* global createjs */
+import Cell from './cell';
 
-class Board {
-   constructor(stage) {
-     this.stage = stage;
+class Grid {
+  constructor(stage) {
+  this.stage = stage;
+  createjs.Ticker.addEventListener('tick', this.stage);
 
-     this.handleClick = this.handleClick.bind(this);
-   }
+  this.handleClick = this.handleClick.bind(this);
+  this.handleMouseMove = this.handleMouseMove.bind(this);
 
-   handleClick(e) {
-     const cell = e.target;
-     console.log(e.target);
-     cell.graphics.beginFill('#0FF').drawRect(0, 0, 10, 10);
-     this.stage.update();
-   }
+  this.grid = this.drawGrid();
+}
 
-   drawGrid() {
-     for(let i = 0; i < 15; i ++ ){
-       for(let j = 0; j < 15; j ++){
-         const cell = new createjs.Shape();
-         cell.graphics.setStrokeStyle(0.5).beginStroke("black");
-         cell.x = i*10;
-         cell.y = j*10;
-         cell.graphics.beginFill('#FFF').drawRect(0, 0, 10, 10);
-         cell.on('click', this.handleClick);
+handleClick(e) {
+  const gridX = Math.floor(e.stageX/10);
+  const gridY = Math.floor(e.stageY/10);
+  const node = this.grid[gridX][gridY];
+  if(this.start === node || this.goal === node) {
+    return false;
+  }
 
-         this.stage.addChild(cell);
-       }
-     }
+  node.toggleIsObstacle();
+  return true;
+}
 
-     this.stage.update();
-   }
- }
+handleMouseMove(e) {
+  const currX = Math.floor(e.stageX/10)*10;
+  const currY = Math.floor(e.stageY/10)*10;
+  const prevX = this.handleMouseMove.prevX;
+  const prevY = this.handleMouseMove.prevY;
 
- export default Board;
-//
-// import Cell from './cell';
-//
-// class Grid {
-//   constructor(stage) {
-//
-//     this.stage = stage;
-//
-//     this.resetDimensions();
-//     this.grid = this.buildGrid();
-//     this.addListeners();
-//     this.allowPaint = true;
-//   }
-//
-//   resetDimensions(){
-//     this.canvasWidth = this.stage.canvas.width;
-//     this.canvasHeight = this.stage.canvas.height;
-//     this.width = 20;
-//     this.height = 20;
-//   }
-//
-//   buildGrid() {
-//     let grid = {};
-//
-//     for(let i = 0; i < this.canvasWidth; i += this.width){
-//       for(let j = 0; j < this.canvasHeight; j += this.height){
-//         const node = new Cell(i, j, [this.width, this.height]);
-//         grid[node.coords] = node;
-//         this.stage.addChild(node.easelCell);
-//       }
-//     }
-//
-//     return grid;
-//   }
-//
-//   addListeners() {
-//     this.stage.on('click', this.handleClick.bind(this));
-//     this.stage.on('pressmove', this.handleMouseMove.bind(this));
-//     this.stage.on('pressup', () => {
-//       this.handleMouseMove.prevCoords = null;
-//     });
-//   }
-//
-//   init() {
-//     // this.setupSimple();
-//     // this.setStart(`${10*this.width},${10*this.height}`);
-//     // this.setGoal(`${26*this.width},${10*this.height}`);
-//     createjs.Ticker.addEventListener('tick', this.stage);
-//   }
-//
-//   handleClick(e) {
-//     console.log([
-//       Math.floor(e.stageX/this.width),
-//       Math.floor(e.stageY/this.height),
-//     ].toString());
-//
-//     if (this.allowPaint) {
-//       const node = this.grid[this._getCoordsFromEvent(e)];
-//       node.toggleIsObstacle();
-//     }
-//   }
-//
-//   handleMouseMove(e) {
-//     const currCoords = this._getCoordsFromEvent(e);
-//     if (!this.grid[currCoords]) return false;
-//
-//     const prevCoords = this.handleMouseMove.prevCoords;
-//
-//     //only allow pressmove in discrete cells
-//     if(currCoords !== prevCoords) {
-//       if (this.start === prevCoords) {
-//         this.setStart(currCoords);
-//       } else if (this.goal === prevCoords) {
-//         this.setGoal(currCoords);
-//       } else {
-//         if (this.start !== currCoords &&
-//             this.goal !== currCoords &&
-//             this.allowPaint) {
-//           const node = this.grid[currCoords];
-//           node.toggleIsObstacle();
-//         }
-//       }
-//
-//       this.handleMouseMove.prevCoords = currCoords;
-//     }
-//   }
-//
-//   setStart(coords) {
-//     if(this.start) this.grid[this.start].setType('empty');
-//     this.start = coords;
-//
-//     this.grid[coords].setType('start');
-//   }
-//
-//   setGoal(coords) {
-//     if(this.goal) this.grid[this.goal].setType('empty');
-//     this.goal = coords;
-//     this.grid[coords].setType('goal');
-//   }
-//
-//   clearSearch() {
-//     for(let coords in this.grid){
-//       this.grid[coords].clearIfSearch();
-//     }
-//     this.allowPaint = true;
-//   }
-//
-//   clearObstacles() {
-//     for(let coords in this.grid){
-//       this.grid[coords].clearIfObstacle();
-//     }
-//   }
-//
-//   neighbors(coords) {
-//     const [x, y] = coords.split(',').map(str => parseInt(str));
-//
-//     //array of coords that are neighbors
-//     let neighbors = [];
-//     for(let width = -1; width < 2; width ++) {
-//       for(let height = -1; height < 2; height ++) {
-//         if(width === height || width === -height) continue;
-//
-//         const testCoords = [x + this.width*width, y + this.height*height].toString();
-//         if (this.grid[testCoords]) {
-//           neighbors.push(testCoords);
-//         }
-//       }
-//     }
-//     return neighbors;
-//   }
-//
-//   _localToGrid(localCoords) {
-//     let [i, j] = localCoords.split(',').map(str => parseInt(str));
-//     return [i*this.width, j*this.height].toString();
-//   }
-//
-//   _getCoordsFromEvent(e) {
-//     return [
-//       Math.floor(e.stageX/this.width)*this.width,
-//       Math.floor(e.stageY/this.height)*this.height,
-//     ].toString();
-//   }
-//
-//   _generateCoords() {
-//     let x = Math.random()*this.DIM_X;
-//     let y = Math.random()*this.DIM_Y;
-//     x = Math.floor(x/this.width)*this.width;
-//     y = Math.floor(y/this.height)*this.height;
-//     return [x, y].toString();
-//   }
-// }
-//
-// export default Grid;
+  //only allow pressmove in discrete cells
+  if (currX !== prevX || currY !== prevY) {
+      const node = this.grid[currX/10][currY/10];
+
+      if (this.isStart(prevX, prevY)) {
+        this.setStart(node);
+      } else if (this.isGoal(prevX, prevY)) {
+        this.setGoal(node);
+      } else {
+        node.toggleIsObstacle();
+      }
+
+      this.handleMouseMove.prevX = currX;
+      this.handleMouseMove.prevY = currY;
+  }
+}
+
+isStart(x, y) {
+  return x === this.start.easelCell.x && y === this.start.easelCell.y;
+}
+
+isGoal(x, y) {
+  return x === this.goal.easelCell.x && y === this.goal.easelCell.y;
+}
+
+setStart(node) {
+  if(this.start) {
+    this.start.fillByString('empty');
+  }
+
+  node.fillByString('start');
+  this.start = node;
+}
+
+setGoal(node) {
+  if(this.goal) {
+    this.goal.fillByString('empty');
+  }
+  node.fillByString('goal');
+  this.goal = node;
+}
+
+drawGrid() {
+  let grid = [];
+
+  for(let i = 0; i < 15; i ++ ){
+    grid.push([]);
+
+    for(let j = 0; j < 15; j ++){
+      const node = new Cell(i*10, j*10);
+      this.stage.addChild(node.easelCell);
+      grid[i].push(node);
+    }
+  }
+
+  this.setStart(grid[10][11]);
+  this.setGoal(grid[1][7]);
+
+  this.stage.on('click', this.handleClick);
+  this.stage.on('pressmove', this.handleMouseMove);
+  this.stage.on('pressup', () => {
+    this.handleMouseMove.prevX = null;
+    this.handleMouseMove.prevY = null;
+  });
+
+  return grid;
+}
+}
+
+export default Grid;
