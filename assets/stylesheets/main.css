@@ -1,0 +1,7 @@
+body {
+   height: 60vh;
+ }
+
+ #pathFinderCanvas {
+   height: 100%;
+ }
