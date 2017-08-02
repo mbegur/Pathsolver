@@ -216,7 +216,7 @@ var Grid = function () {
         this.end.fillByString('empty');
       }
       node.fillByString('end');
-      this.start = node;
+      this.end = node;
     }
   }]);
 
@@ -275,7 +275,7 @@ var Cell = function () {
   }, {
     key: 'drawBorder',
     value: function drawBorder() {
-      this.singleCell.graphics.setStrokeStyle(0.5).beginStroke('#ffffff').drawRect(0, 0, 10, 10);
+      this.singleCell.graphics.setStrokeStyle(1.5).beginStroke('#ffffff').drawRect(0, 0, 10, 10);
     }
   }, {
     key: 'moveTo',

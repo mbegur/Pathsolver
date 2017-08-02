@@ -5,7 +5,7 @@ class Cell {
     this.singleCell = new createjs.Shape();
     this.drawBorder();
     this.isObstacle = false;
-    this.fillByString('empty')
+    this.fillByString('empty');
 
     this.moveTo(x, y);
   }
@@ -28,7 +28,7 @@ class Cell {
   drawBorder() {
     this.singleCell
       .graphics
-      .setStrokeStyle(0.5)
+      .setStrokeStyle(1.5)
       .beginStroke('#ffffff')
       .drawRect(0,0,10,10);
   }

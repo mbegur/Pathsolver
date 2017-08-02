@@ -93,7 +93,7 @@ class Grid {
       this.end.fillByString('empty');
     }
     node.fillByString('end');
-    this.start = node;
+    this.end = node;
   }
 
 
