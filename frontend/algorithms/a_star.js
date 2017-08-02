@@ -54,7 +54,7 @@ class aStar {
 
 
   oldRun() {
-    this.initializeFrontier();
+    this.addFrontier();
 
     while(!this.frontier.isEmpty()) {
       const current = this.frontier.dequeue();
@@ -65,6 +65,22 @@ class aStar {
     }
 
     return this.buildPath();
+  }
+
+  run() {
+    this.addFrontier();
+
+    this.updateInterval = setInterval(
+      () => {
+        const current = this.frontier.dequeue();
+        if(!current || current === this.board.end) {
+          clearInterval(this.updateInterval);
+          // this.path = new Path(this.buildPath(), this.board.stage)
+        }
+
+        this.processNeighbors(current);
+        this.board.grid[current].setType('visited');
+      },20);
   }
 
   buildPath() {
@@ -85,3 +101,5 @@ class aStar {
 
 
 }
+
+export default aStar;

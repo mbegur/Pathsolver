@@ -5,7 +5,7 @@ import Cell from './cell';
 class Grid {
   constructor(stage) {
     this.stage = stage;
-    createjs.Ticker.addEventListener('tick', this.stage);
+    // createjs.Ticker.addEventListener('tick', this.stage);
     this.handleClick = this.handleClick.bind(this);
     this.handleMouseOver = this.handleMouseOver.bind(this);
     this.grid = this.drawGrid();
@@ -24,8 +24,8 @@ class Grid {
       }
     }
 
-   this.setStart(grid[10][11]);
-   this.setEnd(grid[1][7]);
+   this.setStart(grid[4][7]);
+   this.setEnd(grid[10][7]);
 
    this.stage.on('click', this.handleClick);
    this.stage.on('pressmove', this.handleMouseOver);
@@ -78,6 +78,16 @@ class Grid {
   isEnd(x, y) {
     return x === this.end.singleCell.x && this.end.singleCell.y;
   }
+
+    clearIfSearch() {
+      if (['frontier', 'visited'].includes(this.type)) {
+        this.setType('empty');
+      }
+    }
+
+    clearIfObstacle() {
+      if (this.type === 'obstacle') this.setType('empty');
+    }
 
   setStart(node) {
     if(this.start) {

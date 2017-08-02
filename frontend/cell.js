@@ -10,11 +10,26 @@ class Cell {
     this.moveTo(x, y);
   }
 
-  toggleObstacle() {
-    this.isObstacle = !this.isObstacle;
-    const str =  this.isObstacle? 'obstacle' : 'empty';
-    this.fillByString(str);
+  setType(type) {
+    if (['visited','frontier'].includes(type) &&
+        ['start','goal','obstacle'].includes(this.type)) {
+          return;
+        }
+
+    this.type = type;
+    this._fill(Cell.COLORS[type]);
   }
+
+  toggleObstacle() {
+    if(this.type === 'obstacle') {
+      this.setType('empty');
+    } else if (this.type === 'empty') {
+      this.setType('obstacle');
+    }
+
+  }
+
+
 
   _fill(color) {
     this.singleCell.graphics.beginFill(color).drawRect(0,0,10,10);
@@ -28,7 +43,7 @@ class Cell {
   drawBorder() {
     this.singleCell
       .graphics
-      .setStrokeStyle(1.5)
+      .setStrokeStyle(2)
       .beginStroke('#ffffff')
       .drawRect(0,0,10,10);
   }
@@ -36,6 +51,12 @@ class Cell {
   moveTo(x, y) {
     this.singleCell.x = x;
     this.singleCell.y = y;
+  }
+
+  clearIfSearch() {
+    if (['frontier', 'visited'].includes(this.type)) {
+      this.setType('empty');
+    }
   }
 
 }
