@@ -292,7 +292,8 @@ Cell.COLORS = {
   'empty': '#DCDCDC',
   'start': '#008000',
   'end': '#FF0000',
-  'obstacle': '#808080'
+  'obstacle': '#808080',
+  'visited': '#e0d6f5'
 };
 
 exports.default = Cell;
