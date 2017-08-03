@@ -1,5 +1,5 @@
 import Board from './grid';
-import * as Finders from './search/search_export';
+import * as Finders from './algorithims/search_export';
 window.Finders = Finders;
 
 class Root {

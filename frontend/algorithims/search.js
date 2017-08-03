@@ -25,7 +25,7 @@ class Search {
         const current = this.frontier.get();
         if(!current || current === this.board.goal) {
           clearInterval(this.updateInterval);
-          this.path = new Path(this.buildPath(), this.board.stage);
+          this.path = new Path(this.buildPath(), this.board.stage)
         }
 
         this.processNeighbors(current);
