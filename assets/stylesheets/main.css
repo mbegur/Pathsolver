@@ -2,21 +2,35 @@
 body {
   display: flex;
   justify-content: center;
+  background-color:#cde364;
+	background-image: radial-gradient(#fff 10%, transparent 10%),
+	radial-gradient(#fff 10%, transparent 10%);
 }
 
 .overallcanvas {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
 .controls {
-  /*height: 80vh;*/
-  right: 1%;
-  top: 10%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: 100px;
+  align-items: center;
   width: 50vh;
+  border: 2px solid black;
+  font-family: helvetica, sans-serif;
+
+}
+
+#algorithims {
+  border-top: 2px solid black;
+}
+
+.algo-options {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*align-items: center;*/
 }
