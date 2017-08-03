@@ -1,8 +1,8 @@
 /* global createjs */
 
-class graphNode {
+class Cell {
   constructor(x, y, dx, dy) {
-    this.easelCell = new createjs.Shape();
+    this.cell = new createjs.Shape();
     this.dx = dx;
     this.dy = dy;
     this.setType('empty');
@@ -16,13 +16,13 @@ class graphNode {
         }
 
     this.type = type;
-    this._fill(graphNode.COLORS[type]);
+    this._fill(Cell.COLORS[type]);
   }
 
   setCoords(x, y) {
     this.coords = [x, y].toString();
-    this.easelCell.x = x;
-    this.easelCell.y = y;
+    this.cell.x = x;
+    this.cell.y = y;
   }
 
   toggleIsObstacle() {
@@ -44,31 +44,32 @@ class graphNode {
   }
 
   _fill(color) {
-    this.easelCell.graphics.clear();
+    this.cell.graphics.clear();
     this.drawBorder();
-    this.easelCell
+    this.cell
       .graphics
       .beginFill(color)
-      .drawRect(1,1,this.dx-2,this.dy-2)
+      .drawRect(0,0,this.dx,this.dy)
       .endFill();
   }
 
   drawBorder() {
-    this.easelCell
+    this.cell
       .graphics
       .setStrokeStyle(1)
-      .beginStroke('#fff')
+      .beginStroke('white')
       .drawRect(0,0,this.dx,this.dy)
       .endStroke();
   }
 }
 
-graphNode.COLORS = {
+Cell.COLORS = {
   'empty': '#DCDCDC',
   'start': '#008000',
-  'end': '#FF0000',
+  'goal': '#FF0000',
   'obstacle': '#808080',
-  'visited': '#e0d6f5'
+  'visited': '#c2adeb',
+  'frontier': '#a184e1'
 };
 
-export default graphNode;
+export default Cell;

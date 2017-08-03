@@ -1,13 +1,12 @@
-import Grid from './grid';
-import aStar from './algorithms/a_star';
+import Board from './grid';
+import * as Finders from './search/search_export';
+window.Finders = Finders;
 
-window.aStar = aStar;
-
-class View {
+class Root {
   constructor(stage) {
-    this.board = new Grid(stage);
+    this.board = new Board(stage);
     this.board.init();
-    this.finder = new aStar(this.board);
+    this.finder = new Finders.AStar(this.board);
     this.addListeners();
 
     this.resetDimensions();
@@ -16,13 +15,13 @@ class View {
   addListeners() {
     window.addEventListener('resize', this.resetDimensions.bind(this));
 
-    $('#algo-controls input').on('change', () => {
-      const algoName = $('input[name=algo]:checked', '#algo-controls').val();
+    $('#algorithims input').on('change', () => {
+      const algoName = $('input[name=algorithim-type]:checked', '#algorithims').val();
       this.finder.kill();
-      this.finder = new aStar(this.board);
+      this.finder = new Finders[algoName](this.board);
       this.board.clearSearch();
     });
-    $('#run-search').on('click', (e) => {
+    $('#start-search').on('click', (e) => {
       e.preventDefault();
       this.finder.run();
     });
@@ -31,30 +30,14 @@ class View {
       this.finder.kill();
       this.board.clearSearch();
     });
-    $('#set-obs').on('click', (e) => {
-      e.preventDefault();
-      const preset = $('input[name=preset]:checked', '#obs-controls').val();
-      this.finder.kill();
-      this.board.clearSearch();
-      if(preset === 'simple') {
-        this.board.setupSimple();
-      } else if (preset === 'maze') {
-        this.board.setupMaze();
-      }
-    });
-    $('#clear-obs').on('click', (e) => {
-      e.preventDefault();
-      this.board.clearObstacles();
-    });
   }
 
   resetDimensions() {
     $('#main-canvas').width(window.innerWidth);
     $('#main-canvas').height(window.innerHeight);
-    this.board.resetDimensions();
   }
 
 
 }
 
-export default View;
+export default Root;

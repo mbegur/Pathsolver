@@ -8,7 +8,7 @@ class Path {
 
   processStringPath(stringPath) {
     this.path = new createjs.Shape();
-    this.path.graphics.setStrokeStyle(1).beginStroke('#ff0');
+    this.path.graphics.setStrokeStyle(1).beginStroke('#00FFFF');
 
     stringPath.forEach(
       function(strCoords) {
