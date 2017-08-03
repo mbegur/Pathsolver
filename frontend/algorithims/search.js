@@ -25,7 +25,7 @@ class Search {
         const current = this.frontier.get();
         if(!current || current === this.board.goal) {
           clearInterval(this.updateInterval);
-          this.path = new Path(this.buildPath(), this.board.stage)
+          this.path = new Path(this.buildPath(), this.board.stage);
         }
 
         this.processNeighbors(current);
@@ -63,19 +63,13 @@ class Search {
     return path;
   }
 
-  manhattan(coords1, coords2) {
+  heuristic(coords1, coords2) {
     const [x1, y1] = coords1.split(',').map(s => parseInt(s));
     const [x2, y2] = coords2.split(',').map(s => parseInt(s));
 
     return Math.abs(x1 - x2) + Math.abs(y1 - y2);
   }
 
-  euclidean(coords1, coords2) {
-    const [x1, y1] = coords1.split(',').map(s => parseInt(s));
-    const [x2, y2] = coords2.split(',').map(s => parseInt(s));
-
-    return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-  }
 }
 
 export default Search;

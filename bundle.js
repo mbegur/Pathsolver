@@ -79,7 +79,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* global createjs */
 
 document.addEventListener('DOMContentLoaded', function () {
-  var stage = new createjs.Stage('main-canvas');
+  var stage = new createjs.Stage('pathFinderCanvas');
   var root = new _root2.default(stage);
   window.root = root;
 });
@@ -389,6 +389,7 @@ var Root = function () {
     this.board.init();
     this.finder = new Finders.AStar(this.board);
     this.addListeners();
+    window.addEventListener('resize', this.resetDimensions.bind(this));
 
     this.resetDimensions();
   }
@@ -397,8 +398,6 @@ var Root = function () {
     key: 'addListeners',
     value: function addListeners() {
       var _this = this;
-
-      window.addEventListener('resize', this.resetDimensions.bind(this));
 
       $('#algorithims input').on('change', function () {
         var algoName = $('input[name=algorithim-type]:checked', '#algorithims').val();
@@ -419,8 +418,10 @@ var Root = function () {
   }, {
     key: 'resetDimensions',
     value: function resetDimensions() {
-      $('#main-canvas').width(window.innerWidth);
-      $('#main-canvas').height(window.innerHeight);
+      console.log(window.innerWidth);
+      console.log(window.innerHeight);
+      $('#pathFinderCanvas').width(window.innerWidth);
+      $('#pathFinderCanvas').height(window.innerHeight);
     }
   }]);
 
@@ -629,8 +630,8 @@ var Search = function () {
       return path;
     }
   }, {
-    key: 'manhattan',
-    value: function manhattan(coords1, coords2) {
+    key: 'heuristic',
+    value: function heuristic(coords1, coords2) {
       var _coords1$split$map = coords1.split(',').map(function (s) {
         return parseInt(s);
       }),
@@ -646,25 +647,6 @@ var Search = function () {
           y2 = _coords2$split$map2[1];
 
       return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-    }
-  }, {
-    key: 'euclidean',
-    value: function euclidean(coords1, coords2) {
-      var _coords1$split$map3 = coords1.split(',').map(function (s) {
-        return parseInt(s);
-      }),
-          _coords1$split$map4 = _slicedToArray(_coords1$split$map3, 2),
-          x1 = _coords1$split$map4[0],
-          y1 = _coords1$split$map4[1];
-
-      var _coords2$split$map3 = coords2.split(',').map(function (s) {
-        return parseInt(s);
-      }),
-          _coords2$split$map4 = _slicedToArray(_coords2$split$map3, 2),
-          x2 = _coords2$split$map4[0],
-          y2 = _coords2$split$map4[1];
-
-      return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     }
   }]);
 
@@ -998,7 +980,7 @@ var AStar = function (_Search) {
         var newCost = this.costSoFar[current] + cost;
 
         if (!(neighbor in this.costSoFar) || newCost < this.costSoFar[neighbor]) {
-          var priority = newCost + this.euclidean(neighbor, this.board.goal);
+          var priority = newCost + this.heuristic(neighbor, this.board.goal);
 
           this.frontier.put(neighbor, priority);
           this.cameFrom[neighbor] = current;

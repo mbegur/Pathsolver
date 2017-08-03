@@ -3,30 +3,35 @@
   <head>
     <meta charset="utf-8">
     <title>Pathfinder</title>
-     <script type="application/javascript" src="bundle.js"></script>
      <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+     <script src="bundle.js"></script>
 
-     <link rel="stylesheet" href="./css/pathfinder.css">
+     <link rel="stylesheet" href="./assets/stylesheets/main.css">
   </head>
   <body>
-    <canvas id="main-canvas" height="330" width="500"></canvas>
-    <aside class='controls'>
+    <div class="overallcanvas">
+
+
+    <div>
+      <canvas class="canvas" id="pathFinderCanvas" height="330" width="500"></canvas>
+    </div>
+    <div class='controls'>
       <form id='algorithims'>
         <h3>Algorithms</h3>
 
         <div class='algo-options'>
           <label>
             <input type='radio' name='algorithim-type' checked value='AStar' />
-            <span>A*</span>
+            A*
           </label>
           <label>
             <input type='radio' name='algorithim-type' value='BFS' />
-            <span>Breadth First Search</span>
+            Breadth First Search
           </label>
           <label>
             <input type='radio' name='algorithim-type' value='Dijkstra' />
-            <span>Dijkstra</span>
+            Dijkstra
           </label>
 
 
@@ -38,6 +43,7 @@
       </form>
 
 
-    </aside>
+      </div>
+    </div>
   </body>
 </html>

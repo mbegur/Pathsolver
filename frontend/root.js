@@ -8,12 +8,13 @@ class Root {
     this.board.init();
     this.finder = new Finders.AStar(this.board);
     this.addListeners();
+    window.addEventListener('resize', this.resetDimensions.bind(this));
 
     this.resetDimensions();
   }
 
   addListeners() {
-    window.addEventListener('resize', this.resetDimensions.bind(this));
+
 
     $('#algorithims input').on('change', () => {
       const algoName = $('input[name=algorithim-type]:checked', '#algorithims').val();
@@ -33,8 +34,11 @@ class Root {
   }
 
   resetDimensions() {
-    $('#main-canvas').width(window.innerWidth);
-    $('#main-canvas').height(window.innerHeight);
+    console.log(window.innerWidth);
+    console.log(window.innerHeight);
+    $('#pathFinderCanvas').width(window.innerWidth);
+    $('#pathFinderCanvas').height(window.innerHeight);
+
   }
 
 

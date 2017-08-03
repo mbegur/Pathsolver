@@ -1,7 +1,36 @@
-body {
+/*body {
    height: 60vh;
  }
 
  #pathFinderCanvas {
    height: 100%;
- }
+ }*/
+
+body {
+  display: flex;
+  /*flex-direction: row;*/
+  /*justify-content: center;*/
+  align-content: center;
+  align-items: center;
+
+}
+/*
+body .canvas {
+justify-content: center;
+align-self: center;
+}*/
+
+.overallcanvas {
+  display: flex;
+  align-self: center;
+}
+
+/*canvas#pathFinderCanvas.canvas {
+  height: 500px;
+  width: 500px;
+}*/
+
+/*.controls {
+  display: absolute;
+  z-index: 40;
+}*/

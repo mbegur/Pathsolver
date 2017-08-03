@@ -22,7 +22,7 @@ class AStar extends Search {
 
         if (!(neighbor in this.costSoFar) ||
             newCost < this.costSoFar[neighbor]) {
-              const priority = newCost + this.euclidean(neighbor, this.board.goal);
+              const priority = newCost + this.heuristic(neighbor, this.board.goal);
 
               this.frontier.put(neighbor, priority);
               this.cameFrom[neighbor] = current;
