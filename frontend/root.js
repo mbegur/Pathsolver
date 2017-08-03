@@ -7,7 +7,7 @@ class View {
   constructor(stage) {
     this.board = new Grid(stage);
     this.board.init();
-    this.aStar = new aStar(this.board);
+    this.finder = new aStar(this.board);
     this.addListeners();
 
     this.resetDimensions();
@@ -18,33 +18,34 @@ class View {
 
     $('#algo-controls input').on('change', () => {
       const algoName = $('input[name=algo]:checked', '#algo-controls').val();
-      this.aStar.kill();
+      this.finder.kill();
+      this.finder = new aStar(this.board);
       this.board.clearSearch();
     });
-    $('#start-search').on('click', (e) => {
+    $('#run-search').on('click', (e) => {
       e.preventDefault();
       this.finder.run();
     });
-    // $('#clear-search').on('click', (e) => {
-    //   e.preventDefault();
-    //   this.finder.kill();
-    //   this.board.clearSearch();
-    // });
-    // $('#set-obs').on('click', (e) => {
-    //   e.preventDefault();
-    //   const preset = $('input[name=preset]:checked', '#obs-controls').val();
-    //   this.finder.kill();
-    //   this.board.clearSearch();
-    //   if(preset === 'simple') {
-    //     this.board.setupSimple();
-    //   } else if (preset === 'maze') {
-    //     this.board.setupMaze();
-    //   }
-    // });
-    // $('#clear-obs').on('click', (e) => {
-    //   e.preventDefault();
-    //   this.board.clearObstacles();
-    // });
+    $('#clear-search').on('click', (e) => {
+      e.preventDefault();
+      this.finder.kill();
+      this.board.clearSearch();
+    });
+    $('#set-obs').on('click', (e) => {
+      e.preventDefault();
+      const preset = $('input[name=preset]:checked', '#obs-controls').val();
+      this.finder.kill();
+      this.board.clearSearch();
+      if(preset === 'simple') {
+        this.board.setupSimple();
+      } else if (preset === 'maze') {
+        this.board.setupMaze();
+      }
+    });
+    $('#clear-obs').on('click', (e) => {
+      e.preventDefault();
+      this.board.clearObstacles();
+    });
   }
 
   resetDimensions() {

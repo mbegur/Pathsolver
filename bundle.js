@@ -83,12 +83,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* global createjs */
 
 document.addEventListener('DOMContentLoaded', function () {
+  // const stage = new createjs.Stage('main-canvas');
+  // const root = new Root(stage);
+  // window.root = root;
   window.createjs = createjs;
 
   var stage = new createjs.Stage('pathFinderCanvas');
   var board = new _grid2.default(stage);
   window.board = board;
-  // board.drawGrid();
   // var stage = new createjs.Stage('pathFinderCanvas');
   // const view = new View(stage);
   // window.view = view;
@@ -105,7 +107,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global createjs */
+
 
 var _cell = __webpack_require__(2);
 
@@ -115,127 +120,182 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Grid = function () {
-  function Grid(stage) {
-    _classCallCheck(this, Grid);
+var Board = function () {
+  function Board(stage) {
+    _classCallCheck(this, Board);
 
     this.stage = stage;
-    // createjs.Ticker.addEventListener('tick', this.stage);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleMouseOver = this.handleMouseOver.bind(this);
-    this.grid = this.drawGrid();
+
+    this.resetDimensions();
+    this.grid = this.buildGrid();
+    this.addListeners();
   }
 
-  _createClass(Grid, [{
-    key: 'drawGrid',
-    value: function drawGrid() {
-      var _this = this;
+  _createClass(Board, [{
+    key: 'resetDimensions',
+    value: function resetDimensions() {
+      this.DIM_X = 300;
+      this.DIM_Y = 300;
+      this.dx = 10;
+      this.dy = 20;
+    }
+  }, {
+    key: 'buildGrid',
+    value: function buildGrid() {
+      var grid = {};
 
-      var grid = [];
-
-      for (var i = 0; i < 15; i++) {
-        grid.push([]);
-        for (var j = 0; j < 15; j++) {
-          var newCell = new _cell2.default(i * 10, j * 10);
-          this.stage.addChild(newCell.singleCell);
-          grid[i].push(newCell);
+      for (var i = 0; i < this.DIM_X; i += this.dx) {
+        for (var j = 0; j < this.DIM_Y; j += this.dy) {
+          var node = new _cell2.default(i, j, this.dx, this.dy);
+          grid[node.coords] = node;
+          this.stage.addChild(node.cell);
         }
       }
-
-      this.setStart(grid[4][7]);
-      this.setEnd(grid[10][7]);
-
-      this.stage.on('click', this.handleClick);
-      this.stage.on('pressmove', this.handleMouseOver);
-      this.stage.on('pressup', function () {
-        _this.handleMouseOver.prevX = null;
-        _this.handleMouseOver.prevY = null;
-      });
 
       return grid;
     }
   }, {
+    key: 'addListeners',
+    value: function addListeners() {
+      var _this = this;
+
+      this.stage.on('click', this.handleClick.bind(this));
+      this.stage.on('pressmove', this.handleMouseMove.bind(this));
+      this.stage.on('pressup', function () {
+        _this.handleMouseMove.prevCoords = null;
+      });
+    }
+  }, {
+    key: 'init',
+    value: function init() {
+      this.startingMap();
+      createjs.Ticker.addEventListener('tick', this.stage);
+    }
+  }, {
     key: 'handleClick',
     value: function handleClick(e) {
-      var gridX = Math.floor(e.stageX / 10);
-      var gridY = Math.floor(e.stageY / 10);
-      var cell = this.grid[gridX][gridY];
-      if (this.start === cell || this.end === cell) {
-        return false;
-      }
-
-      cell.toggleObstacle();
-      return true;
+      var node = this.grid[this._getCoordsFromEvent(e)];
+      node.toggleIsObstacle();
     }
   }, {
-    key: 'handleMouseOver',
-    value: function handleMouseOver(e) {
-      var currX = Math.floor(e.stageX / 10) * 10;
-      var currY = Math.floor(e.stageY / 10) * 10;
-      var prevX = this.handleMouseOver.prevX;
-      var prevY = this.handleMouseOver.prevY;
+    key: 'handleMouseMove',
+    value: function handleMouseMove(e) {
+      var currCoords = this._getCoordsFromEvent(e);
+      if (!this.grid[currCoords]) return false;
 
-      if (currX !== prevX || currY !== prevY) {
-        var cell = this.grid[currX / 10][currY / 10];
+      var prevCoords = this.handleMouseMove.prevCoords;
 
-        if (this.isStart(prevX, prevY)) {
-          this.setStart(cell);
-        } else if (this.isEnd(prevX, prevY)) {
-          this.setEnd(cell);
+      //only allow pressmove in discrete cells
+      if (currCoords !== prevCoords) {
+        if (this.start === prevCoords) {
+          this.setStart(currCoords);
+        } else if (this.goal === prevCoords) {
+          this.setGoal(currCoords);
         } else {
-          cell.toggleObstacle();
+          if (this.start !== currCoords && this.goal !== currCoords) {
+            var node = this.grid[currCoords];
+            node.toggleIsObstacle();
+          }
         }
-        this.handleMouseOver.prevX = currX;
-        this.handleMouseOver.prevY = currY;
+
+        this.handleMouseMove.prevCoords = currCoords;
       }
-    }
-  }, {
-    key: 'isStart',
-    value: function isStart(x, y) {
-      return x === this.start.singleCell.x && y === this.start.singleCell.y;
-    }
-  }, {
-    key: 'isEnd',
-    value: function isEnd(x, y) {
-      return x === this.end.singleCell.x && this.end.singleCell.y;
-    }
-  }, {
-    key: 'clearIfSearch',
-    value: function clearIfSearch() {
-      if (['frontier', 'visited'].includes(this.type)) {
-        this.setType('empty');
-      }
-    }
-  }, {
-    key: 'clearIfObstacle',
-    value: function clearIfObstacle() {
-      if (this.type === 'obstacle') this.setType('empty');
     }
   }, {
     key: 'setStart',
-    value: function setStart(node) {
-      if (this.start) {
-        this.start.fillByString('empty');
-      }
+    value: function setStart(coords) {
+      if (this.start) this.grid[this.start].setType('empty');
+      this.start = coords;
 
-      node.fillByString('start');
-      this.start = node;
+      this.grid[coords].setType('start');
     }
   }, {
-    key: 'setEnd',
-    value: function setEnd(node) {
-      if (this.end) {
-        this.end.fillByString('empty');
+    key: 'setGoal',
+    value: function setGoal(coords) {
+      if (this.goal) this.grid[this.goal].setType('empty');
+      this.goal = coords;
+      this.grid[coords].setType('goal');
+    }
+  }, {
+    key: 'clearSearch',
+    value: function clearSearch() {
+      for (var coords in this.grid) {
+        this.grid[coords].clearIfSearch();
       }
-      node.fillByString('end');
-      this.end = node;
+    }
+  }, {
+    key: 'clearObstacles',
+    value: function clearObstacles() {
+      for (var coords in this.grid) {
+        this.grid[coords].clearIfObstacle();
+      }
+    }
+  }, {
+    key: 'startingMap',
+    value: function startingMap() {
+      this.clearObstacles();
+      console.log(3 * this.dx + ',' + 11 * this.dy);
+      this.setStart(3 * this.dx + ',' + 11 * this.dy);
+      this.setGoal(10 * this.dx + ',' + 1 * this.dy);
+      for (var i = 7; i < 15; i++) {
+        this.grid[i * this.dx + ',' + 2 * this.dy].toggleIsObstacle();
+      }
+      for (var j = 3; j < 10; j++) {
+        this.grid[14 * this.dx + ',' + j * this.dy].toggleIsObstacle();
+      }
+    }
+  }, {
+    key: 'neighbors',
+    value: function neighbors(coords) {
+      var _coords$split$map = coords.split(',').map(function (str) {
+        return parseInt(str);
+      }),
+          _coords$split$map2 = _slicedToArray(_coords$split$map, 2),
+          x = _coords$split$map2[0],
+          y = _coords$split$map2[1];
+
+      //array of coords that are neighbors
+
+
+      var neighbors = [];
+      for (var dx = -1; dx < 2; dx++) {
+        for (var dy = -1; dy < 2; dy++) {
+          if (dx === dy || dx === -dy) continue;
+
+          var testCoords = [x + this.dx * dx, y + this.dy * dy].toString();
+          if (this.grid[testCoords]) {
+            neighbors.push(testCoords);
+          }
+        }
+      }
+
+      return neighbors;
+    }
+  }, {
+    key: '_getCoordsFromEvent',
+    value: function _getCoordsFromEvent(e) {
+      return [Math.floor(e.stageX / this.dx) * this.dx, Math.floor(e.stageY / this.dx) * this.dy].toString();
+    }
+  }, {
+    key: '_generateCoords',
+    value: function _generateCoords() {
+      var x = Math.random() * this.DIM_X;
+      var y = Math.random() * this.DIM_Y;
+      x = Math.floor(x / this.dx) * this.dx;
+      y = Math.floor(y / this.dy) * this.dy;
+      return [x, y].toString();
     }
   }]);
 
-  return Grid;
+  return Board;
 }();
 
-exports.default = Grid;
+Board.dx = 12;
+Board.dy = 12;
+Board.DIM_X = 290; //pixels, not # gridpoints
+Board.DIM_Y = 145;
+
+exports.default = Board;
 
 /***/ }),
 /* 2 */
@@ -254,19 +314,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /* global createjs */
 
-var Cell = function () {
-  function Cell(x, y) {
-    _classCallCheck(this, Cell);
+var graphNode = function () {
+  function graphNode(x, y, dx, dy) {
+    _classCallCheck(this, graphNode);
 
-    this.singleCell = new createjs.Shape();
-    this.drawBorder();
-    this.isObstacle = false;
-    this.fillByString('empty');
-
-    this.moveTo(x, y);
+    this.easelCell = new createjs.Shape();
+    this.dx = dx;
+    this.dy = dy;
+    this.setType('empty');
+    this.setCoords(x, y);
   }
 
-  _createClass(Cell, [{
+  _createClass(graphNode, [{
     key: 'setType',
     value: function setType(type) {
       if (['visited', 'frontier'].includes(type) && ['start', 'goal', 'obstacle'].includes(this.type)) {
@@ -274,38 +333,23 @@ var Cell = function () {
       }
 
       this.type = type;
-      this._fill(Cell.COLORS[type]);
+      this._fill(graphNode.COLORS[type]);
     }
   }, {
-    key: 'toggleObstacle',
-    value: function toggleObstacle() {
+    key: 'setCoords',
+    value: function setCoords(x, y) {
+      this.coords = [x, y].toString();
+      this.easelCell.x = x;
+      this.easelCell.y = y;
+    }
+  }, {
+    key: 'toggleIsObstacle',
+    value: function toggleIsObstacle() {
       if (this.type === 'obstacle') {
         this.setType('empty');
       } else if (this.type === 'empty') {
         this.setType('obstacle');
       }
-    }
-  }, {
-    key: '_fill',
-    value: function _fill(color) {
-      this.singleCell.graphics.beginFill(color).drawRect(0, 0, 10, 10);
-    }
-  }, {
-    key: 'fillByString',
-    value: function fillByString(colorString) {
-      this.color = Cell.COLORS[colorString];
-      this._fill(Cell.COLORS[colorString]);
-    }
-  }, {
-    key: 'drawBorder',
-    value: function drawBorder() {
-      this.singleCell.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRect(0, 0, 10, 10);
-    }
-  }, {
-    key: 'moveTo',
-    value: function moveTo(x, y) {
-      this.singleCell.x = x;
-      this.singleCell.y = y;
     }
   }, {
     key: 'clearIfSearch',
@@ -314,12 +358,29 @@ var Cell = function () {
         this.setType('empty');
       }
     }
+  }, {
+    key: 'clearIfObstacle',
+    value: function clearIfObstacle() {
+      if (this.type === 'obstacle') this.setType('empty');
+    }
+  }, {
+    key: '_fill',
+    value: function _fill(color) {
+      this.easelCell.graphics.clear();
+      this.drawBorder();
+      this.easelCell.graphics.beginFill(color).drawRect(1, 1, this.dx - 2, this.dy - 2).endFill();
+    }
+  }, {
+    key: 'drawBorder',
+    value: function drawBorder() {
+      this.easelCell.graphics.setStrokeStyle(1).beginStroke('#fff').drawRect(0, 0, this.dx, this.dy).endStroke();
+    }
   }]);
 
-  return Cell;
+  return graphNode;
 }();
 
-Cell.COLORS = {
+graphNode.COLORS = {
   'empty': '#DCDCDC',
   'start': '#008000',
   'end': '#FF0000',
@@ -327,7 +388,7 @@ Cell.COLORS = {
   'visited': '#e0d6f5'
 };
 
-exports.default = Cell;
+exports.default = graphNode;
 
 /***/ }),
 /* 3 */
@@ -362,7 +423,7 @@ var View = function () {
 
     this.board = new _grid2.default(stage);
     this.board.init();
-    this.aStar = new _a_star2.default(this.board);
+    this.finder = new _a_star2.default(this.board);
     this.addListeners();
 
     this.resetDimensions();
@@ -377,33 +438,34 @@ var View = function () {
 
       $('#algo-controls input').on('change', function () {
         var algoName = $('input[name=algo]:checked', '#algo-controls').val();
-        _this.aStar.kill();
+        _this.finder.kill();
+        _this.finder = new _a_star2.default(_this.board);
         _this.board.clearSearch();
       });
-      $('#start-search').on('click', function (e) {
+      $('#run-search').on('click', function (e) {
         e.preventDefault();
         _this.finder.run();
       });
-      // $('#clear-search').on('click', (e) => {
-      //   e.preventDefault();
-      //   this.finder.kill();
-      //   this.board.clearSearch();
-      // });
-      // $('#set-obs').on('click', (e) => {
-      //   e.preventDefault();
-      //   const preset = $('input[name=preset]:checked', '#obs-controls').val();
-      //   this.finder.kill();
-      //   this.board.clearSearch();
-      //   if(preset === 'simple') {
-      //     this.board.setupSimple();
-      //   } else if (preset === 'maze') {
-      //     this.board.setupMaze();
-      //   }
-      // });
-      // $('#clear-obs').on('click', (e) => {
-      //   e.preventDefault();
-      //   this.board.clearObstacles();
-      // });
+      $('#clear-search').on('click', function (e) {
+        e.preventDefault();
+        _this.finder.kill();
+        _this.board.clearSearch();
+      });
+      $('#set-obs').on('click', function (e) {
+        e.preventDefault();
+        var preset = $('input[name=preset]:checked', '#obs-controls').val();
+        _this.finder.kill();
+        _this.board.clearSearch();
+        if (preset === 'simple') {
+          _this.board.setupSimple();
+        } else if (preset === 'maze') {
+          _this.board.setupMaze();
+        }
+      });
+      $('#clear-obs').on('click', function (e) {
+        e.preventDefault();
+        _this.board.clearObstacles();
+      });
     }
   }, {
     key: 'resetDimensions',

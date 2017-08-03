@@ -1,112 +1,152 @@
 /* global createjs */
-
 import Cell from './cell';
 
-class Grid {
+class Board {
   constructor(stage) {
     this.stage = stage;
-    // createjs.Ticker.addEventListener('tick', this.stage);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleMouseOver = this.handleMouseOver.bind(this);
-    this.grid = this.drawGrid();
 
+    this.resetDimensions();
+    this.grid = this.buildGrid();
+    this.addListeners();
   }
 
-  drawGrid() {
-    let grid = [];
+  resetDimensions(){
+    this.DIM_X = 300;
+    this.DIM_Y = 300;
+    this.dx = 10;
+    this.dy = 20;
+  }
 
-    for(let i = 0; i < 15; i++ ) {
-      grid.push([]);
-      for (let j = 0; j < 15; j++) {
-        const newCell = new Cell(i*10, j*10);
-        this.stage.addChild(newCell.singleCell);
-        grid[i].push(newCell);
+  buildGrid() {
+    let grid = {};
+
+    for(let i = 0; i < this.DIM_X; i += this.dx){
+      for(let j = 0; j < this.DIM_Y; j += this.dy){
+        const node = new Cell(i, j, this.dx, this.dy);
+        grid[node.coords] = node;
+        this.stage.addChild(node.cell);
       }
     }
 
-   this.setStart(grid[4][7]);
-   this.setEnd(grid[10][7]);
+    return grid;
+  }
 
-   this.stage.on('click', this.handleClick);
-   this.stage.on('pressmove', this.handleMouseOver);
-   this.stage.on('pressup', () => {
-     this.handleMouseOver.prevX = null;
-     this.handleMouseOver.prevY = null;
-   });
+  addListeners() {
+    this.stage.on('click', this.handleClick.bind(this));
+    this.stage.on('pressmove', this.handleMouseMove.bind(this));
+    this.stage.on('pressup', () => {
+      this.handleMouseMove.prevCoords = null;
+    });
+  }
 
-   return grid;
- }
-
+  init() {
+    this.startingMap();
+    createjs.Ticker.addEventListener('tick', this.stage);
+  }
 
   handleClick(e) {
-    const gridX = Math.floor(e.stageX/10);
-    const gridY = Math.floor(e.stageY/10);
-    const cell = this.grid[gridX][gridY];
-    if (this.start === cell || this.end === cell) {
-      return false;
-    }
-
-    cell.toggleObstacle();
-    return true;
+    const node = this.grid[this._getCoordsFromEvent(e)];
+    node.toggleIsObstacle();
   }
 
-  handleMouseOver(e) {
-    const currX = Math.floor(e.stageX/10) * 10;
-    const currY = Math.floor(e.stageY/10) * 10;
-    const prevX = this.handleMouseOver.prevX;
-    const prevY = this.handleMouseOver.prevY;
+  handleMouseMove(e) {
+    const currCoords = this._getCoordsFromEvent(e);
+    if (!this.grid[currCoords]) return false;
 
-    if (currX !== prevX || currY !== prevY) {
-      const cell = this.grid[currX/10][currY/10];
+    const prevCoords = this.handleMouseMove.prevCoords;
 
-      if (this.isStart(prevX, prevY)) {
-        this.setStart(cell);
-      }else if(this.isEnd(prevX, prevY)) {
-        this.setEnd(cell);
-      }else {
-        cell.toggleObstacle();
+    //only allow pressmove in discrete cells
+    if(currCoords !== prevCoords) {
+      if (this.start === prevCoords) {
+        this.setStart(currCoords);
+      } else if (this.goal === prevCoords) {
+        this.setGoal(currCoords);
+      } else {
+        if (this.start !== currCoords && this.goal !== currCoords) {
+          const node = this.grid[currCoords];
+          node.toggleIsObstacle();
+        }
       }
-      this.handleMouseOver.prevX = currX;
-      this.handleMouseOver.prevY = currY;
+
+      this.handleMouseMove.prevCoords = currCoords;
     }
   }
 
-  isStart(x, y) {
-    return x === this.start.singleCell.x && y === this.start.singleCell.y;
+  setStart(coords) {
+    if(this.start) this.grid[this.start].setType('empty');
+    this.start = coords;
+
+    this.grid[coords].setType('start');
   }
 
-  isEnd(x, y) {
-    return x === this.end.singleCell.x && this.end.singleCell.y;
+  setGoal(coords) {
+    if(this.goal) this.grid[this.goal].setType('empty');
+    this.goal = coords;
+    this.grid[coords].setType('goal');
   }
 
-    clearIfSearch() {
-      if (['frontier', 'visited'].includes(this.type)) {
-        this.setType('empty');
+  clearSearch() {
+    for(let coords in this.grid){
+      this.grid[coords].clearIfSearch();
+    }
+  }
+
+  clearObstacles() {
+    for(let coords in this.grid){
+      this.grid[coords].clearIfObstacle();
+    }
+  }
+
+  startingMap() {
+    this.clearObstacles();
+    console.log(`${3*this.dx},${11*this.dy}`);
+    this.setStart(`${3*this.dx},${11*this.dy}`);
+    this.setGoal(`${10*this.dx},${1*this.dy}`);
+    for(let i = 7; i < 15; i ++){
+      this.grid[`${i*this.dx},${2*this.dy}`].toggleIsObstacle();
+    }
+    for(let j = 3; j < 10; j++){
+      this.grid[`${14*this.dx},${j*this.dy}`].toggleIsObstacle();
+    }
+  }
+  neighbors(coords) {
+    const [x, y] = coords.split(',').map(str => parseInt(str));
+
+    //array of coords that are neighbors
+    let neighbors = [];
+    for(let dx = -1; dx < 2; dx ++) {
+      for(let dy = -1; dy < 2; dy ++) {
+        if(dx === dy || dx === -dy) continue;
+
+        const testCoords = [x + this.dx*dx, y + this.dy*dy].toString();
+        if (this.grid[testCoords]) {
+          neighbors.push(testCoords);
+        }
       }
     }
 
-    clearIfObstacle() {
-      if (this.type === 'obstacle') this.setType('empty');
-    }
-
-  setStart(node) {
-    if(this.start) {
-      this.start.fillByString('empty');
-    }
-
-    node.fillByString('start');
-    this.start = node;
+    return neighbors;
   }
 
-  setEnd(node) {
-    if (this.end) {
-      this.end.fillByString('empty');
-    }
-    node.fillByString('end');
-    this.end = node;
+  _getCoordsFromEvent(e) {
+    return [
+      Math.floor(e.stageX/this.dx)*this.dx,
+      Math.floor(e.stageY/this.dx)*this.dy,
+    ].toString();
   }
 
-
+  _generateCoords() {
+    let x = Math.random()*this.DIM_X;
+    let y = Math.random()*this.DIM_Y;
+    x = Math.floor(x/this.dx)*this.dx;
+    y = Math.floor(y/this.dy)*this.dy;
+    return [x, y].toString();
+  }
 }
 
-export default Grid;
+Board.dx = 12;
+Board.dy = 12;
+Board.DIM_X = 290; //pixels, not # gridpoints
+Board.DIM_Y = 145;
+
+export default Board;

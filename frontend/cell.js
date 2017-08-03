@@ -1,13 +1,12 @@
 /* global createjs */
 
-class Cell {
-  constructor(x, y) {
-    this.singleCell = new createjs.Shape();
-    this.drawBorder();
-    this.isObstacle = false;
-    this.fillByString('empty');
-
-    this.moveTo(x, y);
+class graphNode {
+  constructor(x, y, dx, dy) {
+    this.easelCell = new createjs.Shape();
+    this.dx = dx;
+    this.dy = dy;
+    this.setType('empty');
+    this.setCoords(x, y);
   }
 
   setType(type) {
@@ -17,40 +16,21 @@ class Cell {
         }
 
     this.type = type;
-    this._fill(Cell.COLORS[type]);
+    this._fill(graphNode.COLORS[type]);
   }
 
-  toggleObstacle() {
+  setCoords(x, y) {
+    this.coords = [x, y].toString();
+    this.easelCell.x = x;
+    this.easelCell.y = y;
+  }
+
+  toggleIsObstacle() {
     if(this.type === 'obstacle') {
       this.setType('empty');
     } else if (this.type === 'empty') {
       this.setType('obstacle');
     }
-
-  }
-
-
-
-  _fill(color) {
-    this.singleCell.graphics.beginFill(color).drawRect(0,0,10,10);
-  }
-
-  fillByString(colorString) {
-    this.color = Cell.COLORS[colorString];
-    this._fill(Cell.COLORS[colorString]);
-  }
-
-  drawBorder() {
-    this.singleCell
-      .graphics
-      .setStrokeStyle(2)
-      .beginStroke('#ffffff')
-      .drawRect(0,0,10,10);
-  }
-
-  moveTo(x, y) {
-    this.singleCell.x = x;
-    this.singleCell.y = y;
   }
 
   clearIfSearch() {
@@ -59,9 +39,31 @@ class Cell {
     }
   }
 
+  clearIfObstacle() {
+    if (this.type === 'obstacle') this.setType('empty');
+  }
+
+  _fill(color) {
+    this.easelCell.graphics.clear();
+    this.drawBorder();
+    this.easelCell
+      .graphics
+      .beginFill(color)
+      .drawRect(1,1,this.dx-2,this.dy-2)
+      .endFill();
+  }
+
+  drawBorder() {
+    this.easelCell
+      .graphics
+      .setStrokeStyle(1)
+      .beginStroke('#fff')
+      .drawRect(0,0,this.dx,this.dy)
+      .endStroke();
+  }
 }
 
-Cell.COLORS = {
+graphNode.COLORS = {
   'empty': '#DCDCDC',
   'start': '#008000',
   'end': '#FF0000',
@@ -69,4 +71,4 @@ Cell.COLORS = {
   'visited': '#e0d6f5'
 };
 
-export default Cell;
+export default graphNode;
