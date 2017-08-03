@@ -8,12 +8,12 @@ class Root {
     this.board.init();
     this.finder = new Finders.AStar(this.board);
     this.addListeners();
-    window.addEventListener('resize', this.resetDimensions.bind(this));
 
     this.resetDimensions();
   }
 
   addListeners() {
+    window.addEventListener('resize', this.resetDimensions.bind(this));
 
 
     $('#algorithims input').on('change', () => {
@@ -33,11 +33,10 @@ class Root {
     });
   }
 
+
   resetDimensions() {
-    console.log(window.innerWidth);
-    console.log(window.innerHeight);
-    $('#pathFinderCanvas').width(window.innerWidth);
-    $('#pathFinderCanvas').height(window.innerHeight);
+    $('#pathFinderCanvas').width("60vw");
+    $('#pathFinderCanvas').height("100vh");
 
   }
 

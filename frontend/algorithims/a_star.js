@@ -4,7 +4,7 @@ import PriorityQueue from '../queues/priority_queue';
 class AStar extends Search {
   initializeFrontier() {
     this.frontier = new PriorityQueue();
-    this.processNeighbors(this.board.start);
+    super.initializeFrontier();
   }
 
   reset() {

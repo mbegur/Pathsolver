@@ -6,6 +6,11 @@ class Search {
     this.reset();
   }
 
+  initializeFrontier() {
+    this.reset();
+    this.processNeighbors(this.board.start);
+  }
+
   reset() {
     if(this.path) this.path.reset();
     this.cameFrom = {};
