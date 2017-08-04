@@ -2,9 +2,9 @@
 body {
   display: flex;
   justify-content: center;
-  background-color:#cde364;
-	background-image: radial-gradient(#fff 10%, transparent 10%),
-	radial-gradient(#fff 10%, transparent 10%);
+  background-color: #F3E5E2;
+	background-image: radial-gradient(#fff 1%, transparent 1%),
+	radial-gradient(#fff 1%, transparent 1%);
 }
 
 .overallcanvas {
@@ -19,10 +19,50 @@ body {
   justify-content: center;
   align-items: center;
   width: 50vh;
+  height: 50vh;
+
   border: 2px solid black;
   font-family: helvetica, sans-serif;
+  background: -webkit-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+  background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+  background: linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+  margin: auto;
+  position: relative;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid #999;
+  border: inset 1px solid #333;
+  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 
 }
+
+button {
+  background-color: lightgreen;
+  border: none;
+  outline: none;
+
+}
+button:hover {
+  cursor: pointer;
+  box-shadow:  rgba(0,0,0,0.24), rgba(0,0,0,0.19);
+}
+
+
+/*button:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s
+}*/
+
+
 
 #algorithims {
   border-top: 2px solid black;

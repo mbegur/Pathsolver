@@ -24,6 +24,8 @@ class Root {
     });
     $('#start-search').on('click', (e) => {
       e.preventDefault();
+      this.board.clearSearch();
+      this.finder.kill();
       this.finder.run();
     });
     $('#clear-search').on('click', (e) => {
@@ -31,6 +33,8 @@ class Root {
       this.finder.kill();
       this.board.clearSearch();
     });
+
+
   }
 
 

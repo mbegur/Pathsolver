@@ -408,6 +408,8 @@ var Root = function () {
       });
       $('#start-search').on('click', function (e) {
         e.preventDefault();
+        _this.board.clearSearch();
+        _this.finder.kill();
         _this.finder.run();
       });
       $('#clear-search').on('click', function (e) {
