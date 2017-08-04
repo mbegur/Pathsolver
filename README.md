@@ -17,6 +17,28 @@ Pick your start and end point by clicking and dragging the green and red squares
 
 ![pathsolver1](/assets/pathsolver1.gif)
 
+Using the following jQuery events, I was able to set, reset, and clear algorithms the user will choose.
+
+```js
+$('#algorithims input').on('change', () => {
+  const algoName = $('input[name=algorithim-type]:checked', '#algorithims').val();
+  this.finder.kill();
+  this.finder = new Finders[algoName](this.board);
+  this.board.clearSearch();
+});
+$('#start-search').on('click', (e) => {
+  e.preventDefault();
+  this.board.clearSearch();
+  this.finder.kill();
+  this.finder.run();
+});
+$('#clear-search').on('click', (e) => {
+  e.preventDefault();
+  this.finder.kill();
+  this.board.clearSearch();
+});
+```
+
 ### Algorithms
 
 #### A\*
