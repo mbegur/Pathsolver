@@ -52,7 +52,6 @@ button {
   border: none;
   outline: none;
   font-size: 18px;
-
 }
 button:hover {
   cursor: pointer;
@@ -64,6 +63,31 @@ h3 {
   align-self: center;
 }
 
+.controls-and-links {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5%;
+}
+
+.links {
+  display: flex;
+  justify-content: space-around;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  align-self: center;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: #3CB371;
+}
 
 
 
@@ -93,4 +117,5 @@ h3 {
   margin-top: 10%;
   /*margin-left: 15%;*/
   align-self: center;
+  margin-bottom: 5%;
 }

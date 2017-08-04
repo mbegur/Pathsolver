@@ -6,7 +6,7 @@
      <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
      <script src="bundle.js"></script>
-
+     <script src="https://use.fontawesome.com/0dc58fe6c9.js"></script>
      <link rel="stylesheet" href="./assets/stylesheets/main.css">
   </head>
   <body>
@@ -14,43 +14,58 @@
     <div>
       <canvas class="canvas" id="pathFinderCanvas" height="330" width="330"></canvas>
     </div>
-    <div class='controls'>
-      <h1>Pathing Master</h2>
-      <ul>
-        <li>Drag and draw obstacles with your mouse</li>
-        <li>Choose a start and end positions</li>
-        <li>Choose an algorithim</li>
-        <li>Click Start Search and watch your maze be solved!</li>
-      </ul>
-      <p>Drag and draw obstacles with your mouse, pick an algorithim and watch it find the closest path between the two points!</p>
-      <form id='algorithims'>
+    <div class="controls-and-links">
+      <div class='controls'>
+        <h1>PathSolver</h2>
+        <ul>
+          <li>Drag and draw obstacles with your mouse</li>
+          <li>Choose start and end positions</li>
+          <li>Choose an algorithim</li>
+          <li>Click Start Search and watch your maze be solved!</li>
+        </ul>
+        <p>Drag and draw obstacles with your mouse, pick an algorithim and watch it find the closest path between the two points!</p>
+        <form id='algorithims'>
 
 
-        <div class='algo-options'>
-          <h3>Algorithms</h3>
-          <label>
-            <input type='radio' name='algorithim-type' checked value='AStar' />
-            A*
-          </label>
-          <label>
-            <input type='radio' name='algorithim-type' value='BFS' />
-            Breadth First Search
-          </label>
-          <label>
-            <input type='radio' name='algorithim-type' value='Dijkstra' />
-            Dijkstra
-          </label>
+          <div class='algo-options'>
+            <h3>Algorithms</h3>
+            <label>
+              <input type='radio' name='algorithim-type' checked value='AStar' />
+              A*
+            </label>
+            <label>
+              <input type='radio' name='algorithim-type' value='BFS' />
+              Breadth First Search
+            </label>
+            <label>
+              <input type='radio' name='algorithim-type' value='Dijkstra' />
+              Dijkstra
+            </label>
+
+
+          </div>
+          <div class='buttons'>
+            <button id='start-search'>Start Search</button>
+            <button id='clear-search'>Clear Search</button>
+          </div>
+        </form>
 
 
         </div>
-        <div class='buttons'>
-          <button id='start-search'>Start Search</button>
-          <button id='clear-search'>Clear Search</button>
-        </div>
-      </form>
+
+          <div class="contact-links">
+            <a href="https://github.com/mbegur/Pathsolver">
+            <i id="github-icon" class="fa fa-github fa-3x" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/mallikbegur/">
+            <i id="linkedin-icon" class="fa fa-linkedin fa-3x" aria-hidden="true"></i>
+            </a>
+          </div>
+
+    </div>
 
 
-      </div>
+
     </div>
   </body>
 </html>
