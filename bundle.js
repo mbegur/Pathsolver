@@ -602,7 +602,7 @@ var Search = function () {
 
         _this.processNeighbors(current);
         _this.board.grid[current].setType('visited');
-      }, 100);
+      }, 50);
     }
   }, {
     key: 'oldRun',

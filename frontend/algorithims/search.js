@@ -35,7 +35,7 @@ class Search {
 
         this.processNeighbors(current);
         this.board.grid[current].setType('visited');
-      },100);
+      }, 50);
   }
 
   oldRun() {
