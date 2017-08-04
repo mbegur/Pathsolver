@@ -20,7 +20,6 @@ class Board {
         this.stage.addChild(node.cell);
       }
     }
-
     return grid;
   }
 
