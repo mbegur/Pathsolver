@@ -26,6 +26,5 @@ class BFS extends Search {
 export default BFS;
 
 // Code created by Nikita Shalimov, github user: ndshal
-// https://stackoverflow.com/questions/3808808/how-to-get-element-by-class-in-javascript
 // Repo
 // https://github.com/ndshal/pathfinder.js/blob/master/js/search/bfs.js

@@ -35,3 +35,7 @@ class AStar extends Search {
 }
 
 export default AStar;
+
+// Code created by Nikita Shalimov, github user: ndshal
+// Repo
+// https://github.com/ndshal/pathfinder.js/blob/master/js/search/a_star.js

@@ -10,7 +10,7 @@ class Cell {
 
   setType(type) {
     if (['visited','frontier'].includes(type) &&
-        ['start','goal','obstacle'].includes(this.type)) {
+    ['start','goal','obstacle'].includes(this.type)) {
           return;
         }
 
