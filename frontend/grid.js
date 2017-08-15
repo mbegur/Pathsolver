@@ -2,11 +2,11 @@
 
 import Cell from './cell';
 
-class Board {
+class Grid {
   constructor(stage) {
     this.stage = stage;
     this.grid = this.drawGrid();
-    this.addListeners();
+    this.events();
   }
 
 
@@ -15,37 +15,39 @@ class Board {
 
     for(let i = 0; i < 300; i += 15){
       for(let j = 0; j < 300; j += 15){
-        const node = new Cell(i, j, 15, 15);
-        grid[node.coords] = node;
-        this.stage.addChild(node.cell);
+        const cell = new Cell(i, j);
+        grid[cell.coords] = cell;
+        this.stage.addChild(cell.cell);
       }
     }
     return grid;
   }
 
-  addListeners() {
+  events() {
     this.stage.on('click', this.handleClick.bind(this));
-    this.stage.on('pressmove', this.handleMouseMove.bind(this));
+    this.stage.on('pressmove', this.handleMouseOver.bind(this));
     this.stage.on('pressup', () => {
-      this.handleMouseMove.prevCoords = null;
+      this.handleMouseOver.prevCoords = null;
     });
   }
 
-  init() {
-    this.startingMap();
-    createjs.Ticker.addEventListener('tick', this.stage);
-  }
+
 
   handleClick(e) {
-    const node = this.grid[this._getCoordsFromEvent(e)];
-    node.toggleIsObstacle();
+    const cell = this.grid[this._getCoordsFromEvent(e)];
+    cell.toggleIsObstacle();
   }
 
-  handleMouseMove(e) {
-    const currCoords = this._getCoordsFromEvent(e);
+  handleMouseOver(e) {
+    const currCoords = () => {
+      return [
+        Math.floor(e.stageX/15)*15,
+        Math.floor(e.stageY/15)*15,
+      ].toString();
+    };
     if (!this.grid[currCoords]) return false;
 
-    const prevCoords = this.handleMouseMove.prevCoords;
+    const prevCoords = this.handleMouseOver.prevCoords;
 
     if(currCoords !== prevCoords) {
       if (this.start === prevCoords) {
@@ -54,12 +56,12 @@ class Board {
         this.setEnd(currCoords);
       } else {
         if (this.start !== currCoords && this.goal !== currCoords) {
-          const node = this.grid[currCoords];
-          node.toggleIsObstacle();
+          const cell = this.grid[currCoords];
+          cell.toggleIsObstacle();
         }
       }
 
-      this.handleMouseMove.prevCoords = currCoords;
+      this.handleMouseOver.prevCoords = currCoords;
     }
   }
 
@@ -94,6 +96,10 @@ class Board {
     this.setEnd(`${14*15},${9*15}`);
 
   }
+  init() {
+    this.startingMap();
+    createjs.Ticker.addEventListener('tick', this.stage);
+  }
   neighbors(coords) {
     const [x, y] = coords.split(',').map(str => parseInt(str));
 
@@ -112,20 +118,8 @@ class Board {
     return neighbors;
   }
 
-  _getCoordsFromEvent(e) {
-    return [
-      Math.floor(e.stageX/15)*15,
-      Math.floor(e.stageY/15)*15,
-    ].toString();
-  }
 
-  _generateCoords() {
-    let x = Math.random()*300;
-    let y = Math.random()*300;
-    x = Math.floor(x/15)*15;
-    y = Math.floor(y/15)*15;
-    return [x, y].toString();
-  }
+
 }
 
-export default Board;
+export default Grid;

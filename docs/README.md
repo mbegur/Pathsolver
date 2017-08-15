@@ -47,7 +47,7 @@ search.js: this lightweight script will house the constructor and update functio
 - Get a green bundle with `webpack`
 - Learn enough `Easel.js` to render an object to the `Canvas` element
 
-**Day 2**: Dedicate this day to learning the `Easel.js` API.  First, build out the `Cell` object to connect to the `Board` object.  Then, use `board.js` to create and render at least the square grid, ideally all 3 grid types.  Build in the ability to toggle the live/dead states on click for each cell.  Goals for the day:
+**Day 2**: Dedicate this day to learning the `Easel.js` API.  First, build out the `Cell` object to connect to the `Grid` object.  Then, use `board.js` to create and render at least the square grid, ideally all 3 grid types.  Build in the ability to toggle the live/dead states on click for each cell.  Goals for the day:
 
 - Complete the `cell.js` module (constructor, update functions)
 - Render a square grid to the `Canvas` using `Easel.js`

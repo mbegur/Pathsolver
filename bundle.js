@@ -107,16 +107,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Board = function () {
-  function Board(stage) {
-    _classCallCheck(this, Board);
+var Grid = function () {
+  function Grid(stage) {
+    _classCallCheck(this, Grid);
 
     this.stage = stage;
     this.grid = this.drawGrid();
     this.addListeners();
   }
 
-  _createClass(Board, [{
+  _createClass(Grid, [{
     key: 'drawGrid',
     value: function drawGrid() {
       var grid = {};
@@ -253,10 +253,10 @@ var Board = function () {
     }
   }]);
 
-  return Board;
+  return Grid;
 }();
 
-exports.default = Board;
+exports.default = Grid;
 
 /***/ }),
 /* 2 */

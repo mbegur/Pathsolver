@@ -1,10 +1,10 @@
-import Board from './grid';
+import Grid from './grid';
 import * as Finders from './algorithims/search_export';
 window.Finders = Finders;
 
 class Root {
   constructor(stage) {
-    this.board = new Board(stage);
+    this.board = new Grid(stage);
     this.board.init();
     this.finder = new Finders.AStar(this.board);
     this.addListeners();

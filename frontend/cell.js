@@ -1,10 +1,9 @@
 /* global createjs */
 
 class Cell {
-  constructor(x, y, dx, dy) {
+  constructor(x, y) {
     this.cell = new createjs.Shape();
-    this.dx = dx;
-    this.dy = dy;
+
     this.setType('empty');
     this.setCoords(x, y);
   }
@@ -49,7 +48,7 @@ class Cell {
     this.cell
       .graphics
       .beginFill(color)
-      .drawRect(0,0,this.dx,this.dy)
+      .drawRect(0,0,15, 15)
       .endFill();
   }
 
@@ -58,7 +57,7 @@ class Cell {
       .graphics
       .setStrokeStyle(1)
       .beginStroke('white')
-      .drawRect(0,0,this.dx,this.dy)
+      .drawRect(0,0, 15, 15)
       .endStroke();
   }
 }
