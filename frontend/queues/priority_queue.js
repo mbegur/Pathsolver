@@ -70,3 +70,8 @@ class PriorityQueue {
 }
 
 export default PriorityQueue;
+
+// Code created by Nikita Shalimov, github user: ndshal
+// https://stackoverflow.com/questions/3808808/how-to-get-element-by-class-in-javascript
+// Repo
+// https://github.com/ndshal/pathfinder.js/blob/master/js/data_structures.js

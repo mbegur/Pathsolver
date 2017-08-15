@@ -96,10 +96,12 @@ class Grid {
     this.setEnd(`${14*15},${9*15}`);
 
   }
+
   init() {
     this.startingMap();
     createjs.Ticker.addEventListener('tick', this.stage);
   }
+  
   neighbors(coords) {
     const [x, y] = coords.split(',').map(str => parseInt(str));
 
