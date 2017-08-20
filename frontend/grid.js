@@ -24,18 +24,10 @@ class Grid {
   }
 
   events() {
-    this.stage.on('click', this.handleClick.bind(this));
     this.stage.on('pressmove', this.handleMouseOver.bind(this));
     this.stage.on('pressup', () => {
       this.handleMouseOver.prevCoords = null;
     });
-  }
-
-
-
-  handleClick(e) {
-    const cell = this.grid[this._getCoordsFromEvent(e)];
-    cell.toggleIsObstacle();
   }
 
   handleMouseOver(e) {
@@ -101,7 +93,7 @@ class Grid {
     this.startingMap();
     createjs.Ticker.addEventListener('tick', this.stage);
   }
-  
+
   neighbors(coords) {
     const [x, y] = coords.split(',').map(str => parseInt(str));
 
